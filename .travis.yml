@@ -1,6 +1,6 @@
 language: python
 python:
-    - "2.7"
+    - "3.7"
     - "pypy"
 install:
     - pip install -r requirements.txt --use-mirrors
@@ -8,7 +8,7 @@ script:
     - nosetests --with-coverage --cover-package=overlay_parse
 after_success:
   - coveralls
-
+dist: xenial
 notifications:
   email:
     recipients:
