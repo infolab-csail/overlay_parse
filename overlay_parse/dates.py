@@ -21,7 +21,7 @@ def date_mean(d1, d2):
 
 
 def date_min(d1, d2):
-    for i1, i2 in reversed(zip(d1, d2)):
+    for i1, i2 in reversed(list(zip(d1, d2))):
         if i2 < i1:
             return d2, d1
 
@@ -168,7 +168,7 @@ matchers = [
 
 
     # July the 14th 1991
-    ('dayn_month_year_date', mf([{'day_month'}, ur"(\s+|\s*,\s*)",
+    ('dayn_month_year_date', mf([{'day_month'}, r"(\s+|\s*,\s*)",
                                  {"year", "word"}],
                                 {"day_month_year", "numeric", "date", "full"},
                                 date_tuple)),
@@ -186,7 +186,7 @@ matchers = [
                     date_tuple)),
 
     # July 13, 1991
-    ('month_day_year', mf([{'day_month'}, ur"(\s+|\s*,?\s*)", "year"],
+    ('month_day_year', mf([{'day_month'}, r"(\s+|\s*,?\s*)", "year"],
                           {"month_day_year", "date"},
                           date_tuple)),
 
@@ -231,17 +231,17 @@ matchers += [('ymd_dates',
               mf([{'month', 'num'}, {'day', 'num'}, {'year', 'num'}],
                  {"date", 'short', 'mdy', "sep_%s"}, date_tuple)), ]
 
-range_symbols = ur"(-|\sto\s|\suntil\s|\xe2\x80\x93|\xe2\x80\x94|\u2013|\u2014)"
+range_symbols = r"(-|\sto\s|\suntil\s|\xe2\x80\x93|\xe2\x80\x94|\u2013|\u2014)"
 matchers += [
     # Date range
     ("range", mf([{"date"},
-                  ur"\s*"+ range_symbols + ur"\s*",
+                  r"\s*"+ range_symbols + r"\s*",
                   {"date"}],
                  {"range"}, date_range)),
 
     # November 20, 1876 in Shusha, Russian Empire – February 1, 1944 in Yerevan
     ("range_place", mf([{"date"},
-                        ur"\s+in\s+.*" + range_symbols + ur"\s*",
+                        r"\s+in\s+.*" + range_symbols + r"\s*",
                         {"date"}],
                        {"range", "with_place"}, date_range)),
 
@@ -251,7 +251,7 @@ matchers += [
     # 424/423 BC
     ("conditional_date_slash",
      mf([{"date"},
-         ur"\s*/\s*",
+         r"\s*/\s*",
          {"date"}],
         {"conditional", "slash", "date"},
         date_conditional)),
@@ -259,7 +259,7 @@ matchers += [
     # 427 or 424
     ("conditional_date_to",
      mf([{"date"},
-         ur"\s+or\s+",
+         r"\s+or\s+",
          {"date"}],
         {"conditional", "or", "date"},
         date_conditional)),

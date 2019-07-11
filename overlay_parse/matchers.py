@@ -37,7 +37,7 @@ class RegexMatcher(BaseMatcher):
         Provide the regex to be matched.
         """
 
-        if isinstance(regex, basestring):
+        if isinstance(regex, str):
             self.regex = re.compile(regex, re.UNICODE)
         else:
             self.regex = regex
@@ -45,7 +45,7 @@ class RegexMatcher(BaseMatcher):
         self.value_fn = value_fn
         self.props = props
 
-        self.id = unicode(regex)
+        self.id = str(regex)
 
     def offset_overlays(self, text, offset=0, **kw):
         """
@@ -60,7 +60,7 @@ class RegexMatcher(BaseMatcher):
         if not isinstance(text, OverlayedText):
             text = OverlayedText(text)
 
-        for m in self.regex.finditer(unicode(text)[offset:]):
+        for m in self.regex.finditer(str(text)[offset:]):
             yield Overlay(text, (offset + m.start(), offset + m.end()),
                           props=self.props,
                           value=self.value(rxmatch=m))
@@ -74,7 +74,7 @@ class RegexMatcher(BaseMatcher):
         if end:
             _text = _text[:end]
 
-        m = self.regex.match(unicode(_text))
+        m = self.regex.match(str(_text))
 
         if m:
             yield Overlay(text, (start + m.start(), start + m.end()),
@@ -100,7 +100,7 @@ class OverlayMatcher(BaseMatcher):
         self.props_match = props_match
         self.props = props or set()
 
-        self.id = unicode(self.props_match)
+        self.id = str(self.props_match)
 
     def offset_overlays(self, text, offset=0, **kw):
         """
@@ -260,8 +260,8 @@ def mf(pred, props=None, value_fn=None, props_on_match=False, priority=None):
     if isinstance(pred, BaseMatcher):
         ret = pred if props_on_match else pred.props
 
-    if isinstance(pred, basestring) or \
-       type(pred).__name__ == 'SRE_Pattern':
+    if isinstance(pred, str) or \
+       type(pred).__name__ == 'Pattern':
         ret = RegexMatcher(pred, props=props, value_fn=value_fn)
 
     if isinstance(pred, set):
