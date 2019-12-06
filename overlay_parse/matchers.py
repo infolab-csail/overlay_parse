@@ -259,10 +259,20 @@ def mf(pred, props=None, value_fn=None, props_on_match=False, priority=None):
 
     if isinstance(pred, BaseMatcher):
         ret = pred if props_on_match else pred.props
+        
+        if priority is not None:
+            ret.priority = priority
+
+        return ret
 
     if isinstance(pred, str) or \
        type(pred).__name__ == 'Pattern':
         ret = RegexMatcher(pred, props=props, value_fn=value_fn)
+        
+        if priority is not None:
+            ret.priority = priority
+
+        return ret
 
     if isinstance(pred, set):
         return OverlayMatcher(pred, props=props, value_fn=value_fn)
@@ -272,8 +282,8 @@ def mf(pred, props=None, value_fn=None, props_on_match=False, priority=None):
         ret = ListMatcher([mf(p, props_on_match=True) for p in pred],
                           props=props, value_fn=value_fn,
                           dependencies=deps)
+        if priority is not None:
+            ret.priority = priority
 
-    if priority is not None:
-        ret.priority = priority
-
-    return ret
+        return ret
+    
